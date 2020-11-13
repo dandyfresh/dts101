@@ -1,0 +1,12 @@
+######VARIABLES SISTEMA
+cd  /home/support/models/research/
+protoc object_detection/protos/*.proto --python_out=.
+export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+######CREAR DATOS
+python3 object_detection/dataset_tools/create_tf_record.py  --data_dir=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/data  --output_path=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/output_train_tf_T101_MOD_LEC_12_11_20.record  --label_map_path=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/T101_MOD_LEC_12_11_20_label_map.pbtxt  --output_val_path=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/output_val_tf_T101_MOD_LEC_12_11_20.record 
+######ENTRENAR
+  python3 object_detection/legacy/train.py --logtostderr --pipeline_config_path=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/faster_rcnn_resnet101_T101_MOD_LEC_12_11_20.config  --train_dir=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/train
+######EVALUAR
+  python3 object_detection/legacy/eval.py --logtostderr --pipeline_config_path=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/faster_rcnn_resnet101_T101_MOD_LEC_12_11_20.config --checkpoint_dir=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/train --eval_dir=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/eval --train_dir=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/train
+######EXPORTAR
+  python3 object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=/datos/marketteam/dts101/T101_MOD_LEC_12_11_20/faster_rcnn_resnet101_T101_MOD_LEC_12_11_20.config --trained_checkpoint_prefix /datos/marketteam/dts101/T101_MOD_LEC_12_11_20/train/model.ckpt-800000 --output_directory /datos/marketteam/dts101/T101_MOD_LEC_12_11_20/export800000
